@@ -7,7 +7,7 @@ control to the main menu processor.
 
 """
 
-import toi.cat.cat as cat
+import toi.cat as cat
 import toi.gameio as gameio
 import toi.processor as proc
 from toi.read import read
