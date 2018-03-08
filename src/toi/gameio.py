@@ -1,9 +1,7 @@
 """
-
 IO module.
 
 Provides IO class used to handle user input and output.
-
 """
 
 from collections import deque
@@ -47,6 +45,7 @@ class IO():
                 i += 1
                 if i > MAX_LINES:
                     print(self.strings[cat.CONTINUE])
+                    input()
                     i = 0
         self.input.clear()
 
