@@ -8,10 +8,6 @@ import mofloc
 import toi.stage.startup as start
 
 
-def main():
-    """ Main loop. """
+if __name__ == "__main__":
     flow = start.StartupFlow()
     mofloc.execute(flow, start.ENTRY_POINT)
-
-if __name__ == "__main__":
-    main()
