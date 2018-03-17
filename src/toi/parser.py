@@ -12,7 +12,7 @@ import enum
 import epp
 
 
-import toi.misc
+import toi.misc as misc
 
 
 #--------- main things ---------#
