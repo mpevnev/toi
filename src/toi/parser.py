@@ -12,6 +12,9 @@ import enum
 import epp
 
 
+import toi.misc
+
+
 #--------- main things ---------#
 
 
@@ -79,7 +82,7 @@ def _make_topic():
     """ Make a help/apropos topic parser. """
     output_parser = epp.chain(
         [epp.greedy(epp.everything()),
-         epp.effect(lambda val, st: val.update({Capture.TOPIC: st.parsed.strip()}))],
+         epp.effect(lambda val, st: val.update({Capture.TOPIC: misc.normalize(st.parsed)}))],
         save_iterator=False)
     return epp.chain(
         [epp.literal("{topic}"),

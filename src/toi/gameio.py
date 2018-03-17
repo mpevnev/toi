@@ -8,6 +8,7 @@ from collections import deque
 import readline
 
 import toi.cat.io as cat
+from toi.misc import normalize
 from toi.read import read
 
 
@@ -33,7 +34,7 @@ class IO():
         print()
         inp = input(f"{prompt} ")
         if do_normalize:
-            inp = _normalize(inp)
+            inp = normalize(inp)
         return inp
 
     def flush(self):
@@ -48,11 +49,3 @@ class IO():
                     input()
                     i = 0
         self.input.clear()
-
-
-#--------- helper things ---------#
-
-
-def _normalize(string):
-    """ Normalize a string. """
-    return "".join(string.lower().split())
