@@ -48,7 +48,7 @@ def _make_alternative(string, game_state):
     # Note the order - literal goes last because it matches pretty much anything
     piece = epp.chain(
         [epp.branch(
-             [white, 
+             [white,
               optional,
               topic,
               literal], save_iterator=False),
@@ -96,4 +96,4 @@ def _make_whitespace():
     return epp.chain(
         [epp.whitespace(min_num=1),
          epp.effect(lambda val, st: output_parser)],
-         save_iterator=False)
+        save_iterator=False)

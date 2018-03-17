@@ -10,42 +10,59 @@ import mofloc
 
 
 import toi.cat as cat
-import toi.cat.common as comm
 import toi.cat.main_menu as mm
-import toi.parser as parser
+import toi.gamestate as state
+from toi.parser import make_parser
+import toi.stage.common as cstage
 
 
 FROM_STARTUP = "from-startup"
 FROM_GAME_PROPER = "from-game"
 
 
-class MainMenuFlow(mofloc.Flow):
+class MainMenuFlow(cstage.FlowWithHelp):
     """ Main menu flow. """
 
     def __init__(self, io, data):
-        super().__init__()
+        super().__init__(io, data, state.GameState(data))
         self.register_entry_point(FROM_STARTUP, self.from_startup)
         self.register_entry_point(FROM_GAME_PROPER, self.from_game_proper)
-        self.io = io
-        self.data = data
+        self.parsers = self.prepare_parsers()
+
+    #--------- helper things ---------#
+
+    def prepare_parsers(self):
+        """ Prepare user input parsers. """
+        res = {}
+        control = self.data.control[cat.C_MAIN_MENU]
+        res[mm.CMD_NEW_GAME] = make_parser(control[mm.CMD_NEW_GAME], self)
+        res[mm.CMD_GREET] = make_parser(control[mm.CMD_GREET], self)
+        return res
+
+    #--------- entry points ---------#
 
     def from_startup(self):
         """
         Actions to perform if this flow was entered from the startup flow.
         """
         self.io.say(self.data.strings[cat.S_MAIN_MENU][mm.GREETING])
-        help_source = self.data.control[cat.C_COMMON][comm.CMD_HELP]
-        help_parser = parser.make_parser(help_source, None)
         while True:
             inp = self.io.ask(self.data.strings[cat.S_MAIN_MENU][mm.PROMPT])
-            output = epp.parse(epp.SRDict(), inp, help_parser)
-            if output is not None:
-                value = output[0]
-                self.io.say(f"Help requested for topic '{value[parser.Capture.TOPIC]}'")
-
+            if self.try_help(inp):
+                continue
+            self.try_new_game(inp)
 
     def from_game_proper(self):
         """
         Actions to perform if the menu was invoked from inside the game.
         """
         raise NotImplementedError
+
+    #--------- menu actions ---------#
+
+    def try_new_game(self, user_input):
+        """
+        If 'user_input' is a 'new game' command invokation, run the party
+        creation flow, otherwise return False.
+        """
+        return False
