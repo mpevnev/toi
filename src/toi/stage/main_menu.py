@@ -51,6 +51,8 @@ class MainMenuFlow(cstage.FlowWithHelp):
             inp = self.io.ask(self.data.strings[cat.MAIN_MENU][mm.PROMPT])
             if self.try_help(inp):
                 continue
+            if self.try_greet(inp):
+                continue
             self.try_new_game(inp)
             self.try_quit(inp)
             # wut?
@@ -63,6 +65,18 @@ class MainMenuFlow(cstage.FlowWithHelp):
         raise NotImplementedError
 
     #--------- menu actions ---------#
+
+    def try_greet(self, user_input):
+        """
+        If 'user_input' is a 'greet me' command invokation, greet the player
+        one more time and return True, otherwise return False.
+        """
+        p = self.parsers[mm.CMD_GREET]
+        output = epp.parse(epp.SRDict(), user_input, p)
+        if output is not None:
+            self.io.say(self.data.strings[cat.MAIN_MENU][mm.GREETING])
+            return True
+        return False
 
     def try_new_game(self, user_input):
         """
