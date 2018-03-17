@@ -24,7 +24,8 @@ class IO():
 
     def say(self, *things):
         """ Add a line to the output queue. """
-        self.input.append(" ".join(map(str, things)).strip())
+        for line in "".join(map(str, things)).splitlines():
+            self.input.append(line.strip())
 
     def ask(self, prompt, do_normalize=False):
         """
