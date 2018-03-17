@@ -1,8 +1,8 @@
 """
-Game state module.
+Game data module.
 
-Provides Game class used to hold all info about the game - data, control
-strings, normal strings, etc.
+Provides GameData class used to hold all data of the game - control strings,
+normal strings, monster recipes, class recipes, etc.
 """
 
 
@@ -10,21 +10,15 @@ import toi.cat as cat
 from toi.read import read
 
 
-class Game():
+class GameData():
     """
-    A container for game information.
+    A container for game data.
     """
 
     def __init__(self):
-        self.data = _read_data()
         self.control = _read_control()
         self.strings = _read_strings()
         self.help = _read_help()
-
-
-def _read_data():
-    """ Read game data. """
-    return NotImplemented
 
 
 def _read_control():

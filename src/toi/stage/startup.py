@@ -9,7 +9,7 @@ to the main menu flow.
 import mofloc
 
 
-from toi.game import Game
+from toi.gamedata import GameData
 import toi.gameio as gameio
 import toi.stage.main_menu as mm
 
@@ -27,9 +27,9 @@ class StartupFlow(mofloc.Flow):
 
 def _start():
     """ Perform the setup. """
-    game = Game()
+    data = GameData()
     io = _init_io()
-    next_flow = mm.MainMenuFlow(io, game)
+    next_flow = mm.MainMenuFlow(io, data)
     raise mofloc.ChangeFlow(next_flow, mm.FROM_STARTUP)
 
 
