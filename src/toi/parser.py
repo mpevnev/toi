@@ -6,12 +6,13 @@ Provides 'make_parser' function to transform strings into parsers.
 
 
 from collections import deque
+import enum
 
 
 import epp
 
 
-#--------- main function ---------#
+#--------- main things ---------#
 
 
 def make_parser(alternative_strings, game_state):
@@ -25,6 +26,12 @@ def make_parser(alternative_strings, game_state):
     return epp.branch(alternatives, save_iterator=False)
 
 
+class Capture(enum.Enum):
+    """ Keys for groups captured by parsers. """
+
+    TOPIC = enum.auto()
+
+
 #--------- helper things ---------#
 
 
@@ -32,16 +39,18 @@ def _make_alternative(string, game_state):
     """ Create and return a parser from a particular grammar. """
     literal = _make_literal()
     optional = _make_optional(game_state)
+    topic = _make_topic()
+    white = _make_whitespace()
     parsers = deque()
     # Note the order - literal goes last because it matches pretty much anything
-    white = epp.whitespace(min_num=0)
     piece = epp.chain(
-        [white,
-         epp.effect(lambda val, st: parsrs.append(white)),
-         epp.branch([optional, literal], save_iterator=False),
-         epp.effect(lambda val, st: parsers.append(val)),
-         epp.effect(lambda val, st: parsers.append(white)),
-         white])
+        [epp.branch(
+             [white, 
+              optional,
+              topic,
+              literal], save_iterator=False),
+         epp.effect(lambda val, st: parsers.append(val))],
+        save_iterator=False)
     total = epp.many(piece, 1)
     output = epp.parse(None, string, total)
     if output is None:
@@ -51,13 +60,37 @@ def _make_alternative(string, game_state):
 
 def _make_literal():
     """ Make a literal parser. """
+    predicate = lambda char: char not in ["[", "]", "{", "}"]
     return epp.chain(
-        [epp.any_word(),
-         epp.effect(lambda val, st: epp.literal(st.parsed))])
+        [epp.many(epp.cond_char(predicate), min_hits=1),
+         epp.effect(lambda val, st: epp.literal(st.parsed))],
+        save_iterator=False)
 
 
 def _make_optional(game_state):
     """ Make an optional group parser. """
     return epp.chain(
         [epp.balanced("[", "]"),
-         epp.effect(lambda val, st: epp.maybe(_make_alternative(st.parsed, game_state)))])
+         epp.effect(lambda val, st: epp.maybe(_make_alternative(st.parsed, game_state)))],
+        save_iterator=False)
+
+
+def _make_topic():
+    """ Make a help/apropos topic parser. """
+    output_parser = epp.chain(
+        [epp.greedy(epp.everything()),
+         epp.effect(lambda val, st: val.update({Capture.TOPIC: st.parsed.strip()}))],
+        save_iterator=False)
+    return epp.chain(
+        [epp.literal("{topic}"),
+         epp.effect(lambda val, st: output_parser)],
+        save_iterator=False)
+
+
+def _make_whitespace():
+    """ Make a whitespace parser. """
+    output_parser = epp.whitespace(min_num=1)
+    return epp.chain(
+        [epp.whitespace(min_num=1),
+         epp.effect(lambda val, st: output_parser)],
+         save_iterator=False)
