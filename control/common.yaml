@@ -1,4 +1,12 @@
 
-help: [help]
+help: ["help {topic}", "? {topic}"]
+
+apropos: ["apropos {topic}"]
 
 quit: [quit, exit]
+
+"yes": ["yes"]
+
+"no": ["no"]
+
+abort: [abort]

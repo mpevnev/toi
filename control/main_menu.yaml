@@ -1,2 +1,4 @@
 
-new game: ["new [game]", start]
+new game: ["new[ game]", start]
+
+greet: ["greet[ me]"]

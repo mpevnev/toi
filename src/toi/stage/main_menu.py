@@ -74,7 +74,7 @@ class MainMenuFlow(cstage.FlowWithHelp):
         if output is not None:
             import toi.stage.party_creation as party
             target_flow = party.PartyCreationFlow(self.io, self.data)
-            raise mofloc.ChangeFlow(target_flow, mm.FROM_MAIN_MENU)
+            raise mofloc.ChangeFlow(target_flow, party.FROM_MAIN_MENU)
         return False
 
     def try_quit(self, user_input):
