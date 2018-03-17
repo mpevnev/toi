@@ -61,11 +61,11 @@ class _HelpFlow(GameFlow):
 
     def help_for_topic(self, topic, exit_after=False):
         """ Display the help for a given topic and then (optionally) exit. """
-        raise mofloc.StopFlow
+        raise mofloc.EndFlow
 
     def general_help(self):
         """ Run interactive help session. """
-        raise mofloc.StopFlow
+        raise mofloc.EndFlow
 
 
 #--------- helper things ---------#

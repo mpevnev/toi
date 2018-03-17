@@ -101,5 +101,5 @@ class MainMenuFlow(cstage.FlowWithHelp):
         if output is not None:
             self.io.say(self.data.strings[cat.COMMON][common.FAREWELL])
             self.io.flush()
-            raise mofloc.StopFlow
+            raise mofloc.EndFlow
         return False
