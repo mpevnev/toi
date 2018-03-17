@@ -23,7 +23,7 @@ class GameState():
 
     def generate_common_parsers(self, data):
         """ Generate parsers common to all flows. """
-        control = data.control[cat.C_COMMON]
+        control = data.control[cat.COMMON]
         res = {}
         res[common.CMD_HELP] = make_parser(control[common.CMD_HELP], self)
         res[common.CMD_QUIT] = make_parser(control[common.CMD_QUIT], self)

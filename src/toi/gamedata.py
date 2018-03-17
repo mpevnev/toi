@@ -24,16 +24,16 @@ class GameData():
 def _read_control():
     """ Read game control strings. """
     res = {}
-    res[cat.C_COMMON] = read("control", "common.yaml")
-    res[cat.C_MAIN_MENU] = read("control", "main_menu.yaml")
+    res[cat.COMMON] = read("control", "common.yaml")
+    res[cat.MAIN_MENU] = read("control", "main_menu.yaml")
     return res
 
 
 def _read_strings():
     """ Read game strings. """
     res = {}
-    res[cat.S_COMMON] = read("strings", "common.yaml")
-    res[cat.S_MAIN_MENU] = read("strings", "main_menu.yaml")
+    res[cat.COMMON] = read("strings", "common.yaml")
+    res[cat.MAIN_MENU] = read("strings", "main_menu.yaml")
     return res
 
 

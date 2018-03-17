@@ -1,13 +1,6 @@
 """
-
-String categories.
-
+String and control categories.
 """
 
-# strings
-S_COMMON = "common"
-S_MAIN_MENU = "main menu"
-
-# control
-C_COMMON = "common"
-C_MAIN_MENU = "main menu"
+COMMON = "common"
+MAIN_MENU = "main menu"
