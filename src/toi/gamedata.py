@@ -6,6 +6,7 @@ normal strings, monster recipes, class recipes, etc.
 """
 
 
+import toi.background as bg
 import toi.cat as cat
 from toi.read import read
 import toi.species as species
@@ -26,7 +27,7 @@ class GameData():
 
 def _read_backgrounds():
     """ Read backgrounds data. """
-    return NotImplemented
+    return list(map(lambda data: bg.Background(data), read("data", "backgrounds.yaml")))
 
 
 def _read_control():

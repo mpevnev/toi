@@ -1,0 +1,10 @@
+
+- name: Fighter
+  shortname: Fi
+  str: +2
+  dex: +2
+
+- name: Wizard
+  shortname: Wi
+  int: +3
+  spi: +1
