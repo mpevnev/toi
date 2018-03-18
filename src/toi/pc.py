@@ -5,6 +5,8 @@ Provides PlayerCharacter.
 """
 
 
+import toi.cat as cat
+import toi.cat.pc as pc
 import toi.stats as stats
 
 
@@ -38,3 +40,15 @@ class PlayerCharacter():
     def _init_stats(self):
         """ Initialize statistics dict. """
         self.stats = self.species.base_stats.copy()
+
+    #--------- information retrieval ---------#
+
+    def short_description(self, strings):
+        """ Return a short description of the character. """
+        res = strings[cat.PC][pc.SHORT_DESCR]
+        return res.format(
+            species=self.species.shortname,
+            bg=self.background.shortname,
+            hp=0,
+            maxhp=0
+            )
