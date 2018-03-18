@@ -56,6 +56,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
             inp = self.io.ask(self.data.strings[cat.CHAR_CREATION][char.PROMPT])
             if self.try_help(inp):
                 continue
+            self.try_abort(inp)
             if self.try_done(inp):
                 continue
             if self.try_list_bgs(inp):
@@ -80,6 +81,18 @@ class CharCreationFlow(cstage.FlowWithHelp):
             if name == "":
                 continue
             return misc.pretty_name(name)
+
+    def try_abort(self, user_input):
+        """
+        If 'user_inpu' is an 'abort' command invokation, end the flow.
+        Otherwise return False.
+        """
+        p = self.game.common_parsers[common.CMD_ABORT]
+        output = epp.parse(epp.SRDict(), user_input, p)
+        if output is not None:
+            self.io.say(self.data.strings[cat.COMMON][common.OKAY])
+            raise mofloc.EndFlow
+        return False
 
     def try_done(self, user_input):
         """
