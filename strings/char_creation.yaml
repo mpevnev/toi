@@ -9,7 +9,7 @@ greeting: |
     * 'done' when you're ready,
     * 'abort' if you decide you don't want to add the character to the party.
 
-name prompt: "Enter the name for your character: "
+name prompt: "Enter the name for your character:"
 
 prompt: What next?
 
