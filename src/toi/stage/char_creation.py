@@ -46,6 +46,20 @@ class CharCreationFlow(cstage.FlowWithHelp):
         res[char.CMD_SET_SPECIES] = make_parser(control[char.CMD_SET_SPECIES], self.game)
         return res
 
+    def overview(self):
+        """ Return the overview string. """
+        strings = self.data.strings[cat.CHAR_CREATION]
+        name_line = strings[char.NAME].format(name=self.name)
+        if self.background is None:
+            bg_line = strings[char.BG].format(bg=strings[char.NOT_SELECTED])
+        else:
+            bg_line = strings[char.BG].format(bg=self.background.name)
+        if self.species is None:
+            species_line = strings[char.SPECIES].format(species=strings[char.NOT_SELECTED])
+        else:
+            species_line = strings[char.SPECIES].format(species=self.species.name)
+        return "\n".join([name_line, species_line, bg_line])
+
     #--------- entry point ---------#
 
     def entry_point(self):
@@ -109,6 +123,15 @@ class CharCreationFlow(cstage.FlowWithHelp):
             if self.species is None:
                 self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_SPECIES])
                 return True
+            prompt = self.data.strings[cat.CHAR_CREATION][char.IS_OK_PROMPT]
+            prompt = prompt.format(overview=self.overview())
+            response = cstage.yesno(
+                prompt,
+                self.data.strings[cat.COMMON][common.JUST_YESNO],
+                self.game.common_parsers,
+                self.io)
+            if response is cstage.Response.NO:
+                return True
             player = PlayerCharacter(self.name, self.species, self.background)
             self.game.party.add_character(player)
             raise mofloc.EndFlow
@@ -150,19 +173,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         p = self.parsers[char.CMD_OVERVIEW]
         output = epp.parse(epp.SRDict(), user_input, p)
         if output is not None:
-            strings = self.data.strings[cat.CHAR_CREATION]
-            name_line = strings[char.NAME].format(name=self.name)
-            if self.background is None:
-                bg_line = strings[char.BG].format(bg=strings[char.NOT_SELECTED])
-            else:
-                bg_line = strings[char.BG].format(bg=self.background.name)
-            if self.species is None:
-                species_line = strings[char.SPECIES].format(species=strings[char.NOT_SELECTED])
-            else:
-                species_line = strings[char.SPECIES].format(species=self.species.name)
-            self.io.say(name_line)
-            self.io.say(bg_line)
-            self.io.say(species_line)
+            self.io.say(self.overview())
             return True
         return False
 

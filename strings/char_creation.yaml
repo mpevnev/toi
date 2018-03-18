@@ -15,6 +15,11 @@ invalid bg: "This is not a valid background."
 
 invalid species: "This is not a valid species."
 
+is okay: |
+    You are about to add the character outlined below to the party.
+    {overview}
+    Confirm?
+
 name prompt: "Enter the name for your character:"
 
 prompt: What next?

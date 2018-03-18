@@ -3,16 +3,17 @@ Character creation string constants.
 """
 
 GREETING = "greeting"
+IS_OK_PROMPT = "is okay"
 NAME_PROMPT = "name prompt"
-PROMPT = "prompt"
 NOT_A_VALID_BG = "invalid bg"
 NOT_A_VALID_SPECIES = "invalid species"
+PROMPT = "prompt"
 SELECT_BG = "bg not selected"
 SELECT_SPECIES = "species not selected"
 
-NOT_SELECTED = "not selected"
-NAME = "name"
 BG = "bg"
+NAME = "name"
+NOT_SELECTED = "not selected"
 SPECIES = "species"
 
 CMD_DONE = "done"
