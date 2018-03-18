@@ -1,0 +1,12 @@
+
+done: ["done", "finish", "d"]
+
+list bgs: ["list backgrounds", "list bgs", "ls backgrounds", "ls bgs"]
+
+list species: ["list species", "ls species"]
+
+overview: ["over[view]", "o"]
+
+set bg: ["set bg[ to] {bg}", "bg {bg}", "set background[ to] {bg}"]
+
+set species: ["set species[ to] {species}", "species {species}"]

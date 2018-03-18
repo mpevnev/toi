@@ -1,0 +1,20 @@
+character list: "Following characters are in the party:"
+
+empty party: "There are no characters in the party."
+
+greeting: |
+    You're about to create an adventuring party.
+    For a full list of available commands and their meaning type
+    'help party creation', but to keep it short you can:
+    * add a character using 'add' command
+    * edit a character using 'edit {CHARACTER'S NAME}' command
+    * and delete a character using 'delete {CHARACTER'S NAME}' command
+    Also, at any point you can 'exit' the game or 'abort' the party creation
+    process and return to the main menu.
+    Type 'done' or 'start' when the party is ready.
+
+name is: "Party's name is '{party_name}'."
+
+name prompt: What will be the name of your adventuring party?
+
+what next: What next?

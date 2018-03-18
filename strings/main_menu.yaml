@@ -1,0 +1,10 @@
+greeting: |
+    Welcome to the Tower of Insanity!
+    Magic, monsters, mayhem and mischief await.
+
+    If you're feeling lost at any point, do peruse game's help system, namely
+    'help' and 'apropos' commands.
+
+prompt: What do you do?
+
+welcome back: Welcome back to the main menu.

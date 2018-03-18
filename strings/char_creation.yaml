@@ -1,0 +1,32 @@
+
+# process
+
+greeting: |
+    You are about to create a character. To see a list of all available
+    commands, use 'help character creation'. Essential commands are:
+    * 'set background to {BACKGROUND}' to set character's class,
+    * 'set species to {SPECIES}' to set character's species,
+    * 'done' when you're ready,
+    * 'abort' if you decide you don't want to add the character to the party.
+
+name prompt: "Enter the name for your character: "
+
+prompt: What next?
+
+invalid bg: "This is not a valid background."
+
+invalid species: "This is not a valid species."
+
+bg not selected: You forgot to select the background!
+
+species not selected: You forgot to select the species!
+
+# overview
+
+not selected: Not selected.
+
+name: "Name: {name}"
+
+bg: "Background: {bg}"
+
+species: "Species: {species}"

@@ -1,0 +1,13 @@
+add: ["add[a pc]", "add[ a][ character]"]
+
+change pc name: ["change {pc} name to {name}"]
+
+change party name: ["change party name to {name}"]
+
+delete: ["delete {pc}"]
+
+done: ["done", "start"]
+
+edit: ["edit {pc}"]
+
+list: ["list", "ls"]

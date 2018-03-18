@@ -17,8 +17,9 @@ from toi.parser import make_parser
 import toi.stage.common as cstage
 
 
-FROM_STARTUP = "from startup"
 FROM_GAME_PROPER = "from game"
+FROM_PARTY_CREATION = "from party creation"
+FROM_STARTUP = "from startup"
 
 
 class MainMenuFlow(cstage.FlowWithHelp):
@@ -26,8 +27,9 @@ class MainMenuFlow(cstage.FlowWithHelp):
 
     def __init__(self, io, data):
         super().__init__(io, data, state.GameState(data))
-        self.register_entry_point(FROM_STARTUP, self.from_startup)
         self.register_entry_point(FROM_GAME_PROPER, self.from_game_proper)
+        self.register_entry_point(FROM_PARTY_CREATION, self.from_party_creation)
+        self.register_entry_point(FROM_STARTUP, self.from_startup)
         self.parsers = self.prepare_parsers()
 
     #--------- helper things ---------#
@@ -42,11 +44,29 @@ class MainMenuFlow(cstage.FlowWithHelp):
 
     #--------- entry points ---------#
 
+    def from_game_proper(self):
+        """
+        Actions to perform if the menu was invoked from inside the game.
+        """
+        raise NotImplementedError
+
+    def from_party_creation(self):
+        """
+        Actions to perform if the menu was entered from the party creation
+        menu.
+        """
+        self.io.say(self.data.strings[cat.MAIN_MENU][mm.WELCOME_BACK])
+        self.main_loop()
+
     def from_startup(self):
         """
         Actions to perform if this flow was entered from the startup flow.
         """
         self.io.say(self.data.strings[cat.MAIN_MENU][mm.GREETING])
+        self.main_loop()
+
+    def main_loop(self):
+        """ Main processing loop. """
         while True:
             inp = self.io.ask(self.data.strings[cat.MAIN_MENU][mm.PROMPT])
             if self.try_help(inp):
@@ -57,12 +77,6 @@ class MainMenuFlow(cstage.FlowWithHelp):
             self.try_quit(inp)
             # wut?
             self.io.say(self.data.strings[cat.COMMON][common.WHAT])
-
-    def from_game_proper(self):
-        """
-        Actions to perform if the menu was invoked from inside the game.
-        """
-        raise NotImplementedError
 
     #--------- menu actions ---------#
 

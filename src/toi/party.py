@@ -19,3 +19,7 @@ class Party():
     def __init__(self, name):
         self.name = name
         self.characters = deque()
+
+    def add_character(self, char):
+        """ Add a character to the party. """
+        self.characters.append(char)
