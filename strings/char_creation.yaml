@@ -1,6 +1,8 @@
 
 # process
 
+bg not selected: You forgot to select the background!
+
 greeting: |
     You are about to create a character. To see a list of all available
     commands, use 'help character creation'. Essential commands are:
@@ -9,24 +11,22 @@ greeting: |
     * 'done' when you're ready,
     * 'abort' if you decide you don't want to add the character to the party.
 
-name prompt: "Enter the name for your character:"
-
-prompt: What next?
-
 invalid bg: "This is not a valid background."
 
 invalid species: "This is not a valid species."
 
-bg not selected: You forgot to select the background!
+name prompt: "Enter the name for your character:"
+
+prompt: What next?
 
 species not selected: You forgot to select the species!
 
 # overview
 
-not selected: Not selected.
+bg: "Background: {bg}"
 
 name: "Name: {name}"
 
-bg: "Background: {bg}"
+not selected: Not selected.
 
 species: "Species: {species}"
