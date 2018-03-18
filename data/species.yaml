@@ -1,0 +1,9 @@
+
+- name: Human
+  shortname: Hu
+  str: 10
+  dex: 10
+  int: 10
+  spi: 10
+  cha: 10
+  luc: 10
