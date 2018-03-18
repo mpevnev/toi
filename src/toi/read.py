@@ -28,4 +28,7 @@ def read(*filename):
 def _try_read(path):
     """ Try reading a YAML file. """
     with open(path) as f:
-        return yaml.safe_load(f)
+        res = yaml.safe_load(f)
+        if res is None:
+            return {}
+        return res
