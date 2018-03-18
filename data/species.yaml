@@ -7,3 +7,12 @@
   spi: 10
   cha: 10
   luc: 10
+
+- name: Orc
+  shortname: Or
+  str: 12
+  dex: 12
+  int: 10
+  spi: 8
+  cha: 8
+  luc: 10
