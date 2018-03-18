@@ -9,4 +9,4 @@ overview: ["over[view]", "o"]
 
 set bg: ["set bg[ to] {bg}", "bg {bg}", "set background[ to] {bg}"]
 
-set species: ["set species[ to] {species}", "species {species}"]
+set species: ["set species[ to] {species}", "sp[ecies] {species}"]
