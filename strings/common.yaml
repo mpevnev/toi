@@ -1,0 +1,13 @@
+ambiguous cmd: "Several commands match what you've typed, please be more specific:"
+
+empty cmd: This is hardly helpful.
+
+farewell: Farewell!
+
+farewell with party name: "Farewell, {party_name}!"
+
+list leader: "* "
+
+okay: Okay, then.
+
+what: Sorry, what?
