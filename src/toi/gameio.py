@@ -33,7 +33,7 @@ class IO():
         """
         self.flush()
         print()
-        inp = input(f"{prompt} ")
+        inp = input(f"{prompt.strip()} ")
         if do_normalize:
             inp = normalize(inp)
         return inp
