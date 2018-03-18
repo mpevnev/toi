@@ -129,7 +129,7 @@ class PartyCreationFlow(cstage.FlowWithHelp):
                 self.io.say(strings[party.LIST_OF_CHARS])
                 for pc in self.game.party.characters:
                     prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
-                    self.io.say(prefix, pc.short_description())
+                    self.io.say(prefix, pc.short_description(self.data.strings))
             return True
         return False
 
