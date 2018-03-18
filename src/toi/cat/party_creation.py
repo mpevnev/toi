@@ -2,13 +2,13 @@
 Party creation string constants.
 """
 
-CHAR_PREFIX = "char prefix"
 EMPTY_PARTY = "empty party"
 GREETING = "greeting"
 LIST_OF_CHARS = "character list"
 NAME_PROMPT = "name prompt"
 NAME_IS = "name is"
 NEXT = "what next"
+WELCOME_BACK = "welcome back"
 
 CMD_ADD = "add"
 CMD_CHANGE_PC_NAME = "change pc name"

@@ -72,6 +72,10 @@ class PartyCreationFlow(cstage.FlowWithHelp):
 
     #--------- actions ---------#
 
+    def welcome_back(self):
+        """ Print 'welcome back' message to mark the end of a subflow. """
+        self.io.say(self.data.strings[cat.PARTY_CREATION][party.WELCOME_BACK])
+
     def read_party_name(self):
         """ Read party's name. """
         name = self.io.ask(self.data.strings[cat.PARTY_CREATION][party.NAME_PROMPT])
@@ -100,6 +104,7 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         if output is not None:
             subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
             mofloc.execute(subflow, charstage.ENTRY)
+            self.welcome_back()
             return True
         return False
 
