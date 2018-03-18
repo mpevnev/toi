@@ -6,6 +6,10 @@ farewell: Farewell!
 
 farewell with party name: "Farewell, {party_name}!"
 
+just yes or no: Just 'yes' or 'no', please.
+
+just yes no abort: Just 'yes', 'no' or 'abort', please.
+
 list leader: "* "
 
 okay: Okay, then.

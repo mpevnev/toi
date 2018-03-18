@@ -6,6 +6,9 @@ help system and asking simple questions.
 """
 
 
+import enum
+
+
 import epp
 import mofloc
 
@@ -14,7 +17,7 @@ import toi.cat.common as common
 import toi.parser as parser
 
 
-#--------- public flow subclasses ---------#
+#--------- public flow subclasses and other things ---------#
 
 
 class GameFlow(mofloc.Flow):
@@ -48,7 +51,47 @@ class FlowWithHelp(GameFlow):
         return False
 
 
-#--------- helper flows ---------#
+def yesno(prompt, reprompt, common_parsers, io):
+    """
+    Ask a simple yes/no question. Insist on yes/no until a suitable response is
+    received. Return appropriate Response value.
+    """
+    inp = io.ask(prompt)
+    yes_parser = common_parsers[common.CMD_YES]
+    no_parser = common_parsers[common.CMD_NO]
+    while True:
+        output = epp.parse(epp.SRDict(), inp, yes_parser)
+        if output is not None:
+            return Response.YES
+        output = epp.parse(epp.SRDict(), inp, no_parser)
+        if output is not None:
+            return Response.NO
+        inp = io.ask(reprompt)
+
+
+def yesnoabort(prompt, reprompt, common_parsers, io):
+    """
+    Ask a simple yes/no/abort question. Insist on yes/no/abort until a suitable
+    response is received. Return appropriate Response value.
+    """
+    inp = io.ask(prompt)
+    yes_parser = common_parsers[common.CMD_YES]
+    no_parser = common_parsers[common.CMD_NO]
+    abort_parser = common_parsers[common.CMD_ABORT]
+    while True:
+        output = epp.parse(epp.SRDict(), inp, yes_parser)
+        if output is not None:
+            return Response.YES
+        output = epp.parse(epp.SRDict(), inp, no_parser)
+        if output is not None:
+            return Response.NO
+        output = epp.parse(epp.SRDict(), inp, abort_parser)
+        if output is not None:
+            return Response.ABORT
+        inp = io.ask(reprompt)
+
+
+#--------- helper things ---------#
 
 
 class _HelpFlow(GameFlow):
@@ -72,3 +115,11 @@ class _HelpFlow(GameFlow):
 
 HELP_PARTICULAR = "particular"
 HELP_GENERAL = "general"
+
+
+class Response(enum.Enum):
+    """ A response to yes/no/abort question. """
+
+    YES = enum.auto()
+    NO = enum.auto()
+    ABORT = enum.auto()
