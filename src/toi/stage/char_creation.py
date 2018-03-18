@@ -119,6 +119,13 @@ class CharCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'list bgs' command invokation, list available
         backgrounds and return True, otherwise return False.
         """
+        p = self.parsers[char.CMD_LIST_BGS]
+        output = epp.parse(epp.SRDict(), user_input, p)
+        if output is not None:
+            for bg in self.data.backgrounds:
+                prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
+                self.io.say(prefix, bg.name)
+            return True
         return False
 
     def try_list_species(self, user_input):
@@ -126,6 +133,13 @@ class CharCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'list species' command invokation, list available
         species and return True, otherwise return False.
         """
+        p = self.parsers[char.CMD_LIST_SPECIES]
+        output = epp.parse(epp.SRDict(), user_input, p)
+        if output is not None:
+            for species in self.data.species:
+                prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
+                self.io.say(prefix, species.name)
+            return True
         return False
 
     def try_overview(self, user_input):
