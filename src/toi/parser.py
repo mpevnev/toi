@@ -45,7 +45,6 @@ def _make_alternative(string, game_state):
     topic = _make_topic()
     white = _make_whitespace()
     parsers = deque()
-    # Note the order - literal goes last because it matches pretty much anything
     piece = epp.chain(
         [epp.branch(
              [white,
@@ -58,6 +57,7 @@ def _make_alternative(string, game_state):
     output = epp.parse(None, string, total)
     if output is None:
         raise RuntimeError(f"Failed to construct a parser from: '{string}'")
+    parsers.append(epp.end_of_input())
     return epp.chain(parsers)
 
 
