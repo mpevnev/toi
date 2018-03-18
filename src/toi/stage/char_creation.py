@@ -110,7 +110,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
                 self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_SPECIES])
                 return True
             player = PlayerCharacter(self.name, self.species, self.background)
-            self.game.party.characters.add_character(player)
+            self.game.party.add_character(player)
             raise mofloc.EndFlow
         return False
 
@@ -141,7 +141,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
             if self.background is None:
                 bg_line = strings[char.BG].format(bg=strings[char.NOT_SELECTED])
             else:
-                bg_line = "background: temp"
+                bg_line = strings[char.BG].format(bg=self.background.name)
             if self.species is None:
                 species_line = strings[char.SPECIES].format(species=strings[char.NOT_SELECTED])
             else:
@@ -157,6 +157,15 @@ class CharCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'set bg' command invokation, set the background of
         the character being created to the value captured by the parser.
         """
+        p = self.parsers[char.CMD_SET_BG]
+        output = epp.parse(epp.SRDict(), user_input, p)
+        if output is not None:
+            bg = output[0][Capture.BACKGROUND]
+            if bg is None:
+                self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_BG])
+                return True
+            self.background = bg
+            return True
         return False
 
     def try_set_species(self, user_input):

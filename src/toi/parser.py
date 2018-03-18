@@ -110,7 +110,21 @@ def _make_whitespace():
 
 def _make_bg(game):
     """ Make a background parser. """
-    output_parser = epp.fail()
+    def variant(bg):
+        """ Make a parser for the background. """
+        fullname = epp.literal(misc.normalize(bg.name))
+        shortname = epp.literal(misc.normalize(bg.shortname))
+        eff = epp.effect(lambda val, st: val.update({Capture.BACKGROUND: bg}))
+        return epp.chain(
+            [epp.branch([fullname, shortname], save_iterator=False),
+             eff],
+            save_iterator=False)
+    catchall = epp.chain(
+        [epp.greedy(epp.everything()),
+         epp.effect(lambda val, st: val.update({Capture.BACKGROUND: None}))],
+        save_iterator=False)
+    total = chain(map(variant, game.data.backgrounds), [catchall])
+    output_parser = epp.branch(total)
     return epp.chain(
         [epp.literal("{bg}"),
          epp.effect(lambda val, st: output_parser)],

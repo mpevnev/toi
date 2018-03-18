@@ -1,6 +1,6 @@
 character list: "Following characters are in the party:"
 
-empty party: "There are no characters in the party."
+empty party: There are no characters in the party.
 
 greeting: |
     You're about to create an adventuring party.
