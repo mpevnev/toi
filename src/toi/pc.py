@@ -47,6 +47,7 @@ class PlayerCharacter():
         """ Return a short description of the character. """
         res = strings[cat.PC][pc.SHORT_DESCR]
         return res.format(
+            name=self.name,
             species=self.species.shortname,
             bg=self.background.shortname,
             hp=0,
