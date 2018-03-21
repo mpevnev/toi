@@ -37,13 +37,12 @@ class FlowWithHelp(GameFlow):
         If 'user_input' is a help command invokation, run the help flow and
         return True, otherwise do nothing and return False.
         """
-        output = parser.parse(self.game.common_parsers[common.CMD_HELP]elp_parser, user_input)
+        output = parser.parse(self.game.common_parsers[common.CMD_HELP], user_input)
         if output is None:
             return False
-        captures = output[0]
         help_flow = _HelpFlow(self.io, self.data, self.game)
-        if parser.Capture.TOPIC in captures:
-            mofloc.execute(help_flow, HELP_PARTICULAR, captures[parser.Capture.TOPIC])
+        if parser.Capture.TOPIC in output:
+            mofloc.execute(help_flow, HELP_PARTICULAR, output[parser.Capture.TOPIC])
         else:
             mofloc.execute(help_flow, HELP_GENERAL)
         return True
