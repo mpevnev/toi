@@ -5,8 +5,12 @@ Provides PlayerCharacter.
 """
 
 
+from collections import deque
+
+
 import toi.cat as cat
 import toi.cat.pc as pc
+import toi.misc as misc
 import toi.stats as stats
 
 
@@ -16,6 +20,7 @@ class PlayerCharacter():
     """
 
     def __init__(self, name, species, background):
+        self.aliases = deque()
         self.name = name
         self.species = species
         self.background = background
@@ -53,3 +58,10 @@ class PlayerCharacter():
             hp=0,
             maxhp=0
             )
+
+
+    #--------- misc ---------#
+
+    def add_alias(self, alias):
+        """ Add an alias for the PC. """
+        self.aliases.append(misc.normalize(alias))
