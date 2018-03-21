@@ -20,13 +20,14 @@ class PlayerCharacter():
     """
 
     def __init__(self, name, species, background):
-        self.aliases = deque()
         self.name = name
+        self.aliases = deque()
         self.species = species
         self.background = background
         self.stats = {}
         self._init_stats()
         self.apply_background_modifiers()
+        self.add_alias(name.split()[0])
 
     #--------- background manipulation ---------#
 
