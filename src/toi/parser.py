@@ -35,7 +35,7 @@ def parse(parser, inp):
     Use a given parser on a given input string, return a SRDict on success,
     None on failure.
     """
-    output = epp.parse(SRDict(), inp, parser)
+    output = epp.parse(epp.SRDict(), inp, parser)
     if output is None:
         return None
     return output[0]
