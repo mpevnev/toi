@@ -182,7 +182,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         output = parse(self.parsers[char.CMD_SET_BG], user_input)
         if output is None:
             return False
-        bg = output[0][Capture.BACKGROUND]
+        bg = output[Capture.BACKGROUND]
         if bg is None:
             self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_BG])
             return True
@@ -197,7 +197,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         output = parse(self.parsers[char.CMD_SET_SPECIES], user_input)
         if output is None:
             return False
-        species = output[0][Capture.SPECIES]
+        species = output[Capture.SPECIES]
         if species is None:
             self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_SPECIES])
             return True
