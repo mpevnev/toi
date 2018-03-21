@@ -12,4 +12,4 @@ def normalize(string):
 
 def pretty_name(string):
     """ Make a name pretty: strip the whitespace and capitalize each word. """
-    return " ".join(map(str.capitalize, string.split()))
+    return " ".join(map(str.capitalize, normalize(string).split()))
