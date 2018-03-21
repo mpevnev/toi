@@ -5,7 +5,6 @@ The flow it contains handles the main menu.
 """
 
 
-import epp
 import mofloc
 
 
@@ -13,7 +12,7 @@ import toi.cat as cat
 import toi.cat.common as common
 import toi.cat.main_menu as mm
 import toi.gamestate as state
-from toi.parser import make_parser
+from toi.parser import make_parser, parse
 import toi.stage.common as cstage
 
 
@@ -85,35 +84,32 @@ class MainMenuFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'greet me' command invokation, greet the player
         one more time and return True, otherwise return False.
         """
-        p = self.parsers[mm.CMD_GREET]
-        output = epp.parse(epp.SRDict(), user_input, p)
-        if output is not None:
-            self.io.say(self.data.strings[cat.MAIN_MENU][mm.GREETING])
-            return True
-        return False
+        output = parse(self.parsers[mm.CMD_GREET], user_input)
+        if output is None:
+            return False
+        self.io.say(self.data.strings[cat.MAIN_MENU][mm.GREETING])
+        return True
 
     def try_new_game(self, user_input):
         """
         If 'user_input' is a 'new game' command invokation, run the party
         creation flow, otherwise return False.
         """
-        new_game_parser = self.parsers[mm.CMD_NEW_GAME]
-        output = epp.parse(epp.SRDict(), user_input, new_game_parser)
-        if output is not None:
-            import toi.stage.party_creation as party
-            target_flow = party.PartyCreationFlow(self.io, self.data)
-            raise mofloc.ChangeFlow(target_flow, party.FROM_MAIN_MENU)
-        return False
+        output = parse(self.parsers[mm.CMD_NEW_GAME], user_input)
+        if output is None:
+            return False
+        import toi.stage.party_creation as party
+        target_flow = party.PartyCreationFlow(self.io, self.data)
+        raise mofloc.ChangeFlow(target_flow, party.FROM_MAIN_MENU)
 
     def try_quit(self, user_input):
         """
         If 'user_input' is a 'quit' command invokation, quit the game,
         otherwise return False.
         """
-        quit_parser = self.game.common_parsers[common.CMD_QUIT]
-        output = epp.parse(epp.SRDict(), user_input, quit_parser)
-        if output is not None:
-            self.io.say(self.data.strings[cat.COMMON][common.FAREWELL])
-            self.io.flush()
-            raise mofloc.EndFlow
-        return False
+        output = parse(self.game.common_parsers[common.CMD_QUIT], user_input)
+        if output is None:
+            return False
+        self.io.say(self.data.strings[cat.COMMON][common.FAREWELL])
+        self.io.flush()
+        raise mofloc.EndFlow

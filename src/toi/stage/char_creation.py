@@ -100,110 +100,106 @@ class CharCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is an 'abort' command invokation, end the flow.
         Otherwise return False.
         """
-        p = self.game.common_parsers[common.CMD_ABORT]
-        output = parse(p, user_input)
-        if output is not None:
-            self.io.say(self.data.strings[cat.COMMON][common.OKAY])
-            raise mofloc.EndFlow
-        return False
+        output = parse(self.game.common_parsers[common.CMD_ABORT], user_input)
+        if output is None:
+            return False
+        self.io.say(self.data.strings[cat.COMMON][common.OKAY])
+        raise mofloc.EndFlow
 
     def try_done(self, user_input):
         """
         If 'user_input' is a 'done' command invokation, add the generated
-        character to the party and end the flow.
+        character to the party and end the flow - if the information is
+        complete and background and species were selected. If some info is
+        missing, say so and return True.
+
         Otherwise, return False.
         """
-        p = self.parsers[char.CMD_DONE]
-        output = parse(p, user_input)
-        if output is not None:
-            if self.background is None:
-                self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_BG])
-                return True
-            if self.species is None:
-                self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_SPECIES])
-                return True
-            prompt = self.data.strings[cat.CHAR_CREATION][char.IS_OK_PROMPT]
-            prompt = prompt.format(overview=self.overview())
-            response = cstage.yesno(
-                prompt,
-                self.data.strings[cat.COMMON][common.JUST_YESNO],
-                self.game.common_parsers,
-                self.io)
-            if response is cstage.Response.NO:
-                return True
-            player = PlayerCharacter(self.name, self.species, self.background)
-            self.game.party.add_character(player)
-            raise mofloc.EndFlow
-        return False
+        output = parse(self.parsers[char.CMD_DONE], user_input)
+        if output is None:
+            return False
+        if self.background is None:
+            self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_BG])
+            return True
+        if self.species is None:
+            self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_SPECIES])
+            return True
+        prompt = self.data.strings[cat.CHAR_CREATION][char.IS_OK_PROMPT]
+        prompt = prompt.format(overview=self.overview())
+        response = cstage.yesno(
+            prompt,
+            self.data.strings[cat.COMMON][common.JUST_YESNO],
+            self.game.common_parsers,
+            self.io)
+        if response is cstage.Response.NO:
+            return True
+        player = PlayerCharacter(self.name, self.species, self.background)
+        self.game.party.add_character(player)
+        raise mofloc.EndFlow
 
     def try_list_bgs(self, user_input):
         """
         If 'user_input' is a 'list bgs' command invokation, list available
         backgrounds and return True, otherwise return False.
         """
-        p = self.parsers[char.CMD_LIST_BGS]
-        output = parse(p, user_input)
-        if output is not None:
-            for bg in self.data.backgrounds:
-                prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
-                self.io.say(prefix, bg.name)
-            return True
-        return False
+        output = parse(self.parsers[char.CMD_LIST_BGS], user_input)
+        if output is None:
+            return False
+        for bg in self.data.backgrounds:
+            prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
+            self.io.say(prefix, bg.name)
+        return True
 
     def try_list_species(self, user_input):
         """
         If 'user_input' is a 'list species' command invokation, list available
         species and return True, otherwise return False.
         """
-        p = self.parsers[char.CMD_LIST_SPECIES]
-        output = parse(p, user_input)
-        if output is not None:
-            for species in self.data.species:
-                prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
-                self.io.say(prefix, species.name)
-            return True
-        return False
+        output = parse(self.parsers[char.CMD_LIST_SPECIES], user_input)
+        if output is None:
+            return False
+        for species in self.data.species:
+            prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
+            self.io.say(prefix, species.name)
+        return True
 
     def try_overview(self, user_input):
         """
         If 'user_input' is an 'overview' command invokation, print out an
         overview of the character being created.
         """
-        p = self.parsers[char.CMD_OVERVIEW]
-        output = parse(p, user_input)
-        if output is not None:
-            self.io.say(self.overview())
-            return True
-        return False
+        output = parse(self.parsers[char.CMD_OVERVIEW], user_input)
+        if output is None:
+            return False
+        self.io.say(self.overview())
+        return True
 
     def try_set_bg(self, user_input):
         """
         If 'user_input' is a 'set bg' command invokation, set the background of
         the character being created to the value captured by the parser.
         """
-        p = self.parsers[char.CMD_SET_BG]
-        output = parse(p, user_input)
-        if output is not None:
-            bg = output[0][Capture.BACKGROUND]
-            if bg is None:
-                self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_BG])
-                return True
-            self.background = bg
+        output = parse(self.parsers[char.CMD_SET_BG], user_input)
+        if output is None:
+            return False
+        bg = output[0][Capture.BACKGROUND]
+        if bg is None:
+            self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_BG])
             return True
-        return False
+        self.background = bg
+        return True
 
     def try_set_species(self, user_input):
         """
         If 'user_input' is a 'set species' command invokation, set the species
         of the character being created to the value captured by the parser.
         """
-        p = self.parsers[char.CMD_SET_SPECIES]
-        output = parse(p, user_input)
-        if output is not None:
-            species = output[0][Capture.SPECIES]
-            if species is None:
-                self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_SPECIES])
-                return True
-            self.species = species
+        output = parse(self.parsers[char.CMD_SET_SPECIES], user_input)
+        if output is None:
+            return False
+        species = output[0][Capture.SPECIES]
+        if species is None:
+            self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_SPECIES])
             return True
-        return False
+        self.species = species
+        return True

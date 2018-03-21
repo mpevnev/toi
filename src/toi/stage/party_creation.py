@@ -88,29 +88,32 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is an 'abort' command invokation, return to the main
         menu, otherwise return False.
         """
-        p = self.game.common_parsers[common.CMD_ABORT]
-        output = parse(p, user_input)
-        if output is not None:
-            import toi.stage.main_menu as mm
-            self.io.say(self.data.strings[cat.COMMON][common.OKAY])
-            target = mm.MainMenuFlow(self.io, self.data)
-            raise mofloc.ChangeFlow(target, mm.FROM_PARTY_CREATION)
+        output = parse(self.game.common_parsers[common.CMD_ABORT], user_input)
+        if output is None:
+            return False
+        import toi.stage.main_menu as mm
+        self.io.say(self.data.strings[cat.COMMON][common.OKAY])
+        target = mm.MainMenuFlow(self.io, self.data)
+        raise mofloc.ChangeFlow(target, mm.FROM_PARTY_CREATION)
 
     def try_add(self, user_input):
         """
         If 'user_input' is an 'add' command invokation, start a NewChar subflow
         and then return True, otherwise return False.
         """
-        p = self.parsers[party.CMD_ADD]
-        output = parse(p, user_input)
-        if output is not None:
-            subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
-            mofloc.execute(subflow, charstage.ENTRY)
-            self.welcome_back()
-            return True
-        return False
+        output = parse(self.parsers[party.CMD_ADD], user_input)
+        if output is None:
+            return False
+        subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
+        mofloc.execute(subflow, charstage.ENTRY)
+        self.welcome_back()
+        return True
 
     def try_change_name(self, user_input):
+        """
+        If 'user_input' is a 'change name' command invokation, change party's
+        name, print it out and return True, otherwise return False.
+        """
         output = parse(self.parsers[party.CMD_CHANGE_PARTY_NAME], user_input)
         if output is None:
             return False
@@ -126,43 +129,41 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'list' command invokation, print party's name and
         short info on each character, then return True, otherwise return False.
         """
-        p = self.parsers[party.CMD_OVERVIEW]
-        output = parse(p, user_input)
-        if output is not None:
-            strings = self.data.strings[cat.PARTY_CREATION]
-            self.io.say(strings[party.NAME_IS].format(party_name=self.game.party.name))
-            try:
-                _ = self.game.party.characters[0]
-                empty = False
-            except IndexError:
-                empty = True
-            if empty:
-                self.io.say(strings[party.EMPTY_PARTY])
-            else:
-                self.io.say(strings[party.LIST_OF_CHARS])
-                for pc in self.game.party.characters:
-                    prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
-                    self.io.say(prefix, pc.short_description(self.data.strings))
-            return True
-        return False
+        output = parse(self.parsers[party.CMD_OVERVIEW], user_input)
+        if output is None:
+            return False
+        strings = self.data.strings[cat.PARTY_CREATION]
+        self.io.say(strings[party.NAME_IS].format(party_name=self.game.party.name))
+        try:
+            _ = self.game.party.characters[0]
+            empty = False
+        except IndexError:
+            empty = True
+        if empty:
+            self.io.say(strings[party.EMPTY_PARTY])
+        else:
+            self.io.say(strings[party.LIST_OF_CHARS])
+            for pc in self.game.party.characters:
+                prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
+                self.io.say(prefix, pc.short_description(self.data.strings))
+        return True
 
     def try_quit(self, user_input):
         """
         If 'user_input' is a 'quit' command invokation, quit the game,
         otherwise return False.
         """
-        p = self.game.common_parsers[common.CMD_QUIT]
-        output = parse(p, user_input)
-        if output is not None:
-            if self.game.party is None:
-                farewell = self.data.strings[cat.COMMON][common.FAREWELL]
-            else:
-                farewell = self.data.strings[cat.COMMON][common.FAREWELL_WITH_PARTY]
-                farewell = farewell.format(party_name=self.game.party.name)
-            self.io.say(farewell)
-            self.io.flush()
-            raise mofloc.EndFlow
-        return False
+        output = parse(self.game.common_parsers[common.CMD_QUIT], user_input)
+        if output is None:
+            return False
+        if self.game.party is None:
+            farewell = self.data.strings[cat.COMMON][common.FAREWELL]
+        else:
+            farewell = self.data.strings[cat.COMMON][common.FAREWELL_WITH_PARTY]
+            farewell = farewell.format(party_name=self.game.party.name)
+        self.io.say(farewell)
+        self.io.flush()
+        raise mofloc.EndFlow
 
 
 #--------- helper things ---------#
