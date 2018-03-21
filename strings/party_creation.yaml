@@ -15,6 +15,8 @@ greeting: |
 
 name is: "Party's name is '{party_name}'."
 
+new name is: "Party's name is now '{party_name}'."
+
 name prompt: What will be the name of your adventuring party?
 
 welcome back: You're now in the party creation menu again.

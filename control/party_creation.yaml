@@ -1,13 +1,13 @@
-add: ["add[a pc]", "add[ a][ character]"]
+add: ["a[dd][[ a] pc]", "a[dd][[ a] char[acter]]"]
 
-change pc name: ["change {pc} name to {name}"]
+change party name: ["change[ party] name[ to] {name}", "n[ame] {name}"]
 
-change party name: ["change party name to {name}"]
-
-delete: ["delete {pc}"]
+delete: ["del[ete] {pc}"]
 
 done: ["done", "start"]
 
-edit: ["edit {pc}"]
+edit: ["e[dit] {pc}"]
 
-list: ["list", "ls"]
+overview: ["o[verview]"]
+
+quick add: ["qa[dd] {name} {species}[ ]{bg}"]

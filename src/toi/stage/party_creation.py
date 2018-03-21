@@ -13,7 +13,7 @@ import toi.cat.common as common
 import toi.cat.party_creation as party
 import toi.gamestate as state
 import toi.misc as misc
-from toi.parser import make_parser
+from toi.parser import make_parser, parse, Capture
 from toi.party import Party
 import toi.stage.common as cstage
 import toi.stage.char_creation as charstage
@@ -37,12 +37,13 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         res = {}
         control = self.data.control[cat.PARTY_CREATION]
         res[party.CMD_ADD] = make_parser(control[party.CMD_ADD], self.game)
-        res[party.CMD_CHANGE_PC_NAME] = make_parser(control[party.CMD_CHANGE_PC_NAME], self.game)
         res[party.CMD_CHANGE_PARTY_NAME] = make_parser(
             control[party.CMD_CHANGE_PARTY_NAME], self.game)
         res[party.CMD_DELETE] = make_parser(control[party.CMD_DELETE], self.game)
+        res[party.CMD_DONE] = make_parser(control[party.CMD_DONE], self.game)
         res[party.CMD_EDIT] = make_parser(control[party.CMD_EDIT], self.game)
-        res[party.CMD_LIST] = make_parser(control[party.CMD_LIST], self.game)
+        res[party.CMD_OVERVIEW] = make_parser(control[party.CMD_OVERVIEW], self.game)
+        res[party.CMD_QUICK_ADD] = make_parser(control[party.CMD_QUICK_ADD], self.game)
         return res
 
     def welcome_back(self):
@@ -74,7 +75,9 @@ class PartyCreationFlow(cstage.FlowWithHelp):
             # flow-specific actions
             if self.try_add(inp):
                 continue
-            if self.try_list(inp):
+            if self.try_change_name(inp):
+                continue
+            if self.try_overview(inp):
                 continue
             self.io.say(self.data.strings[cat.COMMON][common.WHAT])
 
@@ -107,13 +110,24 @@ class PartyCreationFlow(cstage.FlowWithHelp):
             return True
         return False
 
-    def try_list(self, user_input):
+    def try_change_name(self, user_input):
+        output = parse(self.parsers[party.CMD_CHANGE_PARTY_NAME], user_input)
+        if output is None:
+            return False
+        name = misc.pretty_name(output[Capture.NAME])
+        self.game.party.name = name
+        msg = self.data.strings[cat.PARTY_CREATION][party.NEW_NAME_IS]
+        msg = msg.format(party_name=name)
+        self.io.say(msg)
+        return True
+
+    def try_overview(self, user_input):
         """
         If 'user_input' is a 'list' command invokation, print party's name and
         short info on each character, then return True, otherwise return False.
         """
-        p = self.parsers[party.CMD_LIST]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        p = self.parsers[party.CMD_OVERVIEW]
+        output = parse(p, user_input)
         if output is not None:
             strings = self.data.strings[cat.PARTY_CREATION]
             self.io.say(strings[party.NAME_IS].format(party_name=self.game.party.name))
