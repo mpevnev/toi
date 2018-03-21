@@ -20,6 +20,12 @@ class Party():
         self.name = name
         self.characters = deque()
 
+    #--------- character management ---------#
+
     def add_character(self, char):
         """ Add a character to the party. """
         self.characters.append(char)
+
+    def delete_character(self, char):
+        """ Delete a character from the party. """
+        self.characters = deque(filter(lambda c: c is not char, self.characters))

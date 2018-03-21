@@ -62,6 +62,7 @@ def _make_alternative(string, game, require_eoi=True):
     # capturing parsers
     bg = _make_bg(game)
     name = _make_name()
+    pc = _make_pc(game)
     species = _make_species(game)
     topic = _make_topic()
     #
@@ -75,6 +76,7 @@ def _make_alternative(string, game, require_eoi=True):
                 # captures
                 bg,
                 name,
+                pc,
                 species,
                 topic
             ], save_iterator=False),
@@ -152,6 +154,31 @@ def _make_name():
     return epp.chain(
         [epp.literal("{name}"),
          epp.effect(lambda val, st: output_parser)],
+        save_iterator=False)
+
+
+def _make_pc(game):
+    """ Make a PC name parser. """
+    def specific_pc_parser(pc):
+        """ Make a parser for a specific PC. """
+        name = epp.literal(misc.normalize(pc.name))
+        aliases = epp.multi(pc.aliases)
+        eff = epp.effect(lambda val, st: val.update({Capture.PC: pc}))
+        return epp.chain(
+            [epp.branch([name, aliases], save_iterator=False),
+             eff],
+            save_iterator=False)
+    def parser_generator():
+        """ Generate a PC parser. """
+        variants = map(specific_pc_parser, game.party.characters)
+        catchall = epp.chain(
+            [epp.greedy(epp.everything()),
+             epp.effect(lambda val, st: val.update({Capture.PC: None}))],
+            save_iterator=False)
+        return epp.branch(chain(variants, [catchall]))
+    return epp.chain(
+        [epp.literal("{pc}"),
+         epp.effect(lambda val, st: epp.lazy(parser_generator))],
         save_iterator=False)
 
 

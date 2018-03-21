@@ -77,6 +77,8 @@ class PartyCreationFlow(cstage.FlowWithHelp):
                 continue
             if self.try_change_name(inp):
                 continue
+            if self.try_delete(inp):
+                continue
             if self.try_overview(inp):
                 continue
             self.io.say(self.data.strings[cat.COMMON][common.WHAT])
@@ -121,6 +123,23 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         self.game.party.name = name
         msg = self.data.strings[cat.PARTY_CREATION][party.NEW_NAME_IS]
         msg = msg.format(party_name=name)
+        self.io.say(msg)
+        return True
+
+    def try_delete(self, user_input):
+        """
+        If 'user_input' is a 'delete' command invokation, delete the specified
+        character from the party and return True, otherwise return False.
+        """
+        output = parse(self.parsers[party.CMD_DELETE], user_input)
+        if output is None:
+            return False
+        if output[Capture.PC] is None:
+            self.io.say(self.data.strings[cat.PARTY_CREATION][party.NO_SUCH_CHAR])
+            return True
+        self.game.party.delete_character(output[Capture.PC])
+        msg = self.data.strings[cat.PARTY_CREATION][party.DONE_DELETING]
+        msg = msg.format(deleted_pc=output[Capture.PC].name)
         self.io.say(msg)
         return True
 

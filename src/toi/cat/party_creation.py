@@ -2,6 +2,7 @@
 Party creation string constants.
 """
 
+DONE_DELETING = "done deleting"
 EMPTY_PARTY = "empty party"
 GREETING = "greeting"
 LIST_OF_CHARS = "character list"

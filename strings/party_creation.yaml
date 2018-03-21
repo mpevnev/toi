@@ -1,5 +1,7 @@
 character list: "Following characters are in the party:"
 
+done deleting: "The character {deleted_pc} was removed from the party."
+
 empty party: There are no characters in the party.
 
 greeting: |

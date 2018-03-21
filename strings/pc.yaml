@@ -1,2 +1,2 @@
 
-short description: "{species}{bg}, {hp}/{maxhp}"
+short description: "{name}, {species}{bg}, {hp}/{maxhp}"
