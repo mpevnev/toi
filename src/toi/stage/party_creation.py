@@ -5,7 +5,6 @@ The flow it contains handles the party generation.
 """
 
 
-import epp
 import mofloc
 
 
@@ -46,6 +45,15 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         res[party.CMD_LIST] = make_parser(control[party.CMD_LIST], self.game)
         return res
 
+    def welcome_back(self):
+        """ Print 'welcome back' message to mark the end of a subflow. """
+        self.io.say(self.data.strings[cat.PARTY_CREATION][party.WELCOME_BACK])
+
+    def read_party_name(self):
+        """ Read party's name. """
+        name = self.io.ask(self.data.strings[cat.PARTY_CREATION][party.NAME_PROMPT])
+        return misc.pretty_name(name)
+
     #--------- entry points ---------#
 
     def from_main_menu(self):
@@ -72,22 +80,13 @@ class PartyCreationFlow(cstage.FlowWithHelp):
 
     #--------- actions ---------#
 
-    def welcome_back(self):
-        """ Print 'welcome back' message to mark the end of a subflow. """
-        self.io.say(self.data.strings[cat.PARTY_CREATION][party.WELCOME_BACK])
-
-    def read_party_name(self):
-        """ Read party's name. """
-        name = self.io.ask(self.data.strings[cat.PARTY_CREATION][party.NAME_PROMPT])
-        return misc.pretty_name(name)
-
     def try_abort(self, user_input):
         """
         If 'user_input' is an 'abort' command invokation, return to the main
         menu, otherwise return False.
         """
         p = self.game.common_parsers[common.CMD_ABORT]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             import toi.stage.main_menu as mm
             self.io.say(self.data.strings[cat.COMMON][common.OKAY])
@@ -100,7 +99,7 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         and then return True, otherwise return False.
         """
         p = self.parsers[party.CMD_ADD]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
             mofloc.execute(subflow, charstage.ENTRY)
@@ -138,8 +137,8 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         If 'user_input' is a 'quit' command invokation, quit the game,
         otherwise return False.
         """
-        quit_parser = self.game.common_parsers[common.CMD_QUIT]
-        output = epp.parse(epp.SRDict(), user_input, quit_parser)
+        p = self.game.common_parsers[common.CMD_QUIT]
+        output = parse(p, user_input)
         if output is not None:
             if self.game.party is None:
                 farewell = self.data.strings[cat.COMMON][common.FAREWELL]

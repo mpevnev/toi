@@ -5,7 +5,6 @@ Provides a flow for adding a character to the party.
 """
 
 
-import epp
 import mofloc
 
 
@@ -13,7 +12,7 @@ import toi.cat as cat
 import toi.cat.common as common
 import toi.cat.char_creation as char
 import toi.misc as misc
-from toi.parser import make_parser, Capture
+from toi.parser import make_parser, Capture, parse
 from toi.pc import PlayerCharacter
 import toi.stage.common as cstage
 
@@ -98,11 +97,11 @@ class CharCreationFlow(cstage.FlowWithHelp):
 
     def try_abort(self, user_input):
         """
-        If 'user_inpu' is an 'abort' command invokation, end the flow.
+        If 'user_input' is an 'abort' command invokation, end the flow.
         Otherwise return False.
         """
         p = self.game.common_parsers[common.CMD_ABORT]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             self.io.say(self.data.strings[cat.COMMON][common.OKAY])
             raise mofloc.EndFlow
@@ -115,7 +114,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         Otherwise, return False.
         """
         p = self.parsers[char.CMD_DONE]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             if self.background is None:
                 self.io.say(self.data.strings[cat.CHAR_CREATION][char.SELECT_BG])
@@ -143,7 +142,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         backgrounds and return True, otherwise return False.
         """
         p = self.parsers[char.CMD_LIST_BGS]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             for bg in self.data.backgrounds:
                 prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
@@ -157,7 +156,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         species and return True, otherwise return False.
         """
         p = self.parsers[char.CMD_LIST_SPECIES]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             for species in self.data.species:
                 prefix = self.data.strings[cat.COMMON][common.LIST_PREFIX]
@@ -171,7 +170,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         overview of the character being created.
         """
         p = self.parsers[char.CMD_OVERVIEW]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             self.io.say(self.overview())
             return True
@@ -183,7 +182,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         the character being created to the value captured by the parser.
         """
         p = self.parsers[char.CMD_SET_BG]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             bg = output[0][Capture.BACKGROUND]
             if bg is None:
@@ -199,7 +198,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         of the character being created to the value captured by the parser.
         """
         p = self.parsers[char.CMD_SET_SPECIES]
-        output = epp.parse(epp.SRDict(), user_input, p)
+        output = parse(p, user_input)
         if output is not None:
             species = output[0][Capture.SPECIES]
             if species is None:

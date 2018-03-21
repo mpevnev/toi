@@ -9,7 +9,6 @@ help system and asking simple questions.
 import enum
 
 
-import epp
 import mofloc
 
 
@@ -39,7 +38,7 @@ class FlowWithHelp(GameFlow):
         return True, otherwise do nothing and return False.
         """
         help_parser = self.game.common_parsers[common.CMD_HELP]
-        output = epp.parse(epp.SRDict(), user_input, help_parser)
+        output = parser.parse(help_parser, user_input)
         if output is not None:
             captures = output[0]
             help_flow = _HelpFlow(self.io, self.data, self.game)
@@ -60,10 +59,10 @@ def yesno(prompt, reprompt, common_parsers, io):
     yes_parser = common_parsers[common.CMD_YES]
     no_parser = common_parsers[common.CMD_NO]
     while True:
-        output = epp.parse(epp.SRDict(), inp, yes_parser)
+        output = parser.parse(yes_parser, inp)
         if output is not None:
             return Response.YES
-        output = epp.parse(epp.SRDict(), inp, no_parser)
+        output = parser.parse(no_parser, inp)
         if output is not None:
             return Response.NO
         inp = io.ask(reprompt)
@@ -79,13 +78,13 @@ def yesnoabort(prompt, reprompt, common_parsers, io):
     no_parser = common_parsers[common.CMD_NO]
     abort_parser = common_parsers[common.CMD_ABORT]
     while True:
-        output = epp.parse(epp.SRDict(), inp, yes_parser)
+        output = parser.parse(yes_parser, inp)
         if output is not None:
             return Response.YES
-        output = epp.parse(epp.SRDict(), inp, no_parser)
+        output = parser.parse(no_parser, inp)
         if output is not None:
             return Response.NO
-        output = epp.parse(epp.SRDict(), inp, abort_parser)
+        output = parser.parse(abort_parser, inp)
         if output is not None:
             return Response.ABORT
         inp = io.ask(reprompt)
