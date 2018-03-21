@@ -30,6 +30,17 @@ def make_parser(alternative_strings, game):
     return epp.branch(alternatives, save_iterator=False)
 
 
+def parse(parser, inp):
+    """
+    Use a given parser on a given input string, return a SRDict on success,
+    None on failure.
+    """
+    output = epp.parse(SRDict(), inp, parser)
+    if output is None:
+        return None
+    return output[0]
+
+
 class Capture(enum.Enum):
     """ Keys for groups captured by parsers. """
 
