@@ -54,7 +54,7 @@ class Capture(enum.Enum):
 #--------- helper things ---------#
 
 
-def _make_alternative(string, game):
+def _make_alternative(string, game, require_eoi=True):
     """ Create and return a parser from a particular grammar. """
     white = _make_whitespace()
     literal = _make_literal()
@@ -84,7 +84,8 @@ def _make_alternative(string, game):
     output = epp.parse(None, string, total)
     if output is None:
         raise RuntimeError(f"Failed to construct a parser from: '{string}'")
-    parsers.append(epp.end_of_input())
+    if require_eoi:
+        parsers.append(epp.end_of_input())
     return epp.chain(parsers)
 
 
@@ -103,7 +104,7 @@ def _make_optional(game):
     """ Make an optional group parser. """
     return epp.chain(
         [epp.balanced("[", "]"),
-         epp.effect(lambda val, st: epp.maybe(_make_alternative(st.parsed, game)))],
+         epp.effect(lambda val, st: epp.maybe(_make_alternative(st.parsed, game, False)))],
         save_iterator=False)
 
 
