@@ -20,14 +20,14 @@ class PlayerCharacter():
     """
 
     def __init__(self, name, species, background):
-        self.name = name
+        self.name = None
         self.aliases = deque()
         self.species = species
         self.background = background
         self.stats = {}
         self._init_stats()
         self.apply_background_modifiers()
-        self.add_alias(name.split()[0])
+        self.set_name(name)
 
     #--------- background manipulation ---------#
 
@@ -66,3 +66,20 @@ class PlayerCharacter():
     def add_alias(self, alias):
         """ Add an alias for the PC. """
         self.aliases.append(misc.normalize(alias))
+
+    def remove_alias(self, alias):
+        """ Remove an alias. """
+        self.aliases = deque(filter(lambda a: a != alias, self.aliases))
+
+    def reset_aliases(self):
+        """ Reset the aliases list just to defaults. """
+        self.aliases.clear()
+        self.aliases.append(misc.normalize(self.name.split()[0]))
+
+    def set_name(self, name):
+        """ Set the name of the character and add a default alias. """
+        if self.name is not None:
+            self.remove_alias(misc.normalize(self.name).split()[0])
+        alias = name.split()[0]
+        self.add_alias(alias)
+        self.name = name
