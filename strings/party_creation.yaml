@@ -21,6 +21,8 @@ new name is: "Party's name is now '{party_name}'."
 
 name prompt: What will be the name of your adventuring party?
 
+no char: There's no such character in the party!
+
 welcome back: You're now in the party creation menu again.
 
 what next: What next?

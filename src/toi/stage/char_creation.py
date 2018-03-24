@@ -17,21 +17,47 @@ from toi.pc import PlayerCharacter
 import toi.stage.common as cstage
 
 
-ENTRY = "the only"
+CREATE_NEW = "create new"
+EDIT_EXISTING = "edit existing"
 
 
 class CharCreationFlow(cstage.FlowWithHelp):
-    """ Character creation (and addition to the party) flow. """
+    """ Character creation/editing (and addition to the party) flow. """
 
     def __init__(self, io, data, game):
         super().__init__(io, data, game)
-        self.register_entry_point(ENTRY, self.entry_point)
+        self.register_entry_point(CREATE_NEW, self.create_new)
+        self.register_entry_point(EDIT_EXISTING, self.edit_existing)
         self.parsers = self.prepare_parsers()
         self.name = None
         self.background = None
         self.species = None
+        self.pc = None
 
     #--------- helper things ---------#
+
+    def main_loop(self):
+        """ The main processing loop shared by both entry points. """
+        while True:
+            inp = self.io.ask(self.data.strings[cat.CHAR_CREATION][char.PROMPT])
+            if self.try_help(inp):
+                continue
+            self.try_abort(inp)
+            if self.try_done(inp):
+                continue
+            if self.try_list_bgs(inp):
+                continue
+            if self.try_list_species(inp):
+                continue
+            if self.try_overview(inp):
+                continue
+            if self.try_set_bg(inp):
+                continue
+            if self.try_set_name(inp):
+                continue
+            if self.try_set_species(inp):
+                continue
+            self.io.say(self.data.strings[cat.COMMON][common.WHAT])
 
     def prepare_parsers(self):
         """ Prepare parsers used in character creation actions. """
@@ -42,6 +68,7 @@ class CharCreationFlow(cstage.FlowWithHelp):
         res[char.CMD_LIST_SPECIES] = make_parser(control[char.CMD_LIST_SPECIES], self.game)
         res[char.CMD_OVERVIEW] = make_parser(control[char.CMD_OVERVIEW], self.game)
         res[char.CMD_SET_BG] = make_parser(control[char.CMD_SET_BG], self.game)
+        res[char.CMD_SET_NAME] = make_parser(control[char.CMD_SET_NAME], self.game)
         res[char.CMD_SET_SPECIES] = make_parser(control[char.CMD_SET_SPECIES], self.game)
         return res
 
@@ -59,30 +86,25 @@ class CharCreationFlow(cstage.FlowWithHelp):
             species_line = strings[char.SPECIES].format(species=self.species.name)
         return "\n".join([name_line, species_line, bg_line])
 
-    #--------- entry point ---------#
+    #--------- entry points ---------#
 
-    def entry_point(self):
-        """ Create and add a character. """
-        self.io.say(self.data.strings[cat.CHAR_CREATION][char.GREETING])
+    def create_new(self):
+        """ Create a new character. """
+        self.io.say(self.data.strings[cat.CHAR_CREATION][char.GREETING_NEW])
+        self.pc = None
         self.name = self.read_name()
-        while True:
-            inp = self.io.ask(self.data.strings[cat.CHAR_CREATION][char.PROMPT])
-            if self.try_help(inp):
-                continue
-            self.try_abort(inp)
-            if self.try_done(inp):
-                continue
-            if self.try_list_bgs(inp):
-                continue
-            if self.try_list_species(inp):
-                continue
-            if self.try_overview(inp):
-                continue
-            if self.try_set_bg(inp):
-                continue
-            if self.try_set_species(inp):
-                continue
-            self.io.say(self.data.strings[cat.COMMON][common.WHAT])
+        self.main_loop()
+
+    def edit_existing(self, pc):
+        """ Edit an existing character. """
+        self.pc = pc
+        self.name = pc.name
+        self.background = pc.background
+        self.species = pc.species
+        msg = self.data.strings[cat.CHAR_CREATION][char.GREETING_EDIT]
+        msg = msg.format(overview=self.overview())
+        self.io.say(msg)
+        self.main_loop()
 
     #--------- actions ---------#
 
@@ -133,8 +155,13 @@ class CharCreationFlow(cstage.FlowWithHelp):
             self.io)
         if response is cstage.Response.NO:
             return True
-        player = PlayerCharacter(self.name, self.species, self.background)
-        self.game.party.add_character(player)
+        if self.pc is None:
+            player = PlayerCharacter(self.name, self.species, self.background)
+            self.game.party.add_character(player)
+        else:
+            self.pc.set_name(self.name)
+            self.pc.change_species(self.species)
+            self.pc.change_background(self.background)
         raise mofloc.EndFlow
 
     def try_list_bgs(self, user_input):
@@ -187,6 +214,21 @@ class CharCreationFlow(cstage.FlowWithHelp):
             self.io.say(self.data.strings[cat.CHAR_CREATION][char.NOT_A_VALID_BG])
             return True
         self.background = bg
+        return True
+
+    def try_set_name(self, user_input):
+        """
+        If 'user_input' is a 'set name' command invokation, set the name of the
+        character being edited or created.
+        """
+        output = parse(self.parsers[char.CMD_SET_NAME], user_input)
+        if output is None:
+            return False
+        name = misc.pretty_name(output[Capture.NAME])
+        self.name = name
+        msg = self.data.strings[cat.CHAR_CREATION][char.NEW_NAME_IS]
+        msg = msg.format(name=name)
+        self.io.say(msg)
         return True
 
     def try_set_species(self, user_input):

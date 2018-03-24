@@ -9,4 +9,6 @@ overview: ["o[verview]"]
 
 set bg: ["set bg[ to] {bg}", "bg {bg}", "set background[ to] {bg}"]
 
+set name: ["set name[ to] {name}", "n[ame] {name}"]
+
 set species: ["set species[ to] {species}", "sp[ecies] {species}"]

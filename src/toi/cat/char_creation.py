@@ -2,9 +2,11 @@
 Character creation string constants.
 """
 
-GREETING = "greeting"
+GREETING_EDIT = "greeting edit"
+GREETING_NEW = "greeting new"
 IS_OK_PROMPT = "is okay"
 NAME_PROMPT = "name prompt"
+NEW_NAME_IS = "new name"
 NOT_A_VALID_BG = "invalid bg"
 NOT_A_VALID_SPECIES = "invalid species"
 PROMPT = "prompt"
@@ -21,4 +23,5 @@ CMD_LIST_BGS = "list bgs"
 CMD_LIST_SPECIES = "list species"
 CMD_OVERVIEW = "overview"
 CMD_SET_BG = "set bg"
+CMD_SET_NAME = "set name"
 CMD_SET_SPECIES = "set species"

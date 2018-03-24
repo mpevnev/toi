@@ -79,6 +79,8 @@ class PartyCreationFlow(cstage.FlowWithHelp):
                 continue
             if self.try_delete(inp):
                 continue
+            if self.try_edit(inp):
+                continue
             if self.try_overview(inp):
                 continue
             self.io.say(self.data.strings[cat.COMMON][common.WHAT])
@@ -100,14 +102,14 @@ class PartyCreationFlow(cstage.FlowWithHelp):
 
     def try_add(self, user_input):
         """
-        If 'user_input' is an 'add' command invokation, start a NewChar subflow
-        and then return True, otherwise return False.
+        If 'user_input' is an 'add' command invokation, start a
+        CharCreationFlow subflow and then return True, otherwise return False.
         """
         output = parse(self.parsers[party.CMD_ADD], user_input)
         if output is None:
             return False
         subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
-        mofloc.execute(subflow, charstage.ENTRY)
+        mofloc.execute(subflow, charstage.CREATE_NEW)
         self.welcome_back()
         return True
 
@@ -141,6 +143,23 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         msg = self.data.strings[cat.PARTY_CREATION][party.DONE_DELETING]
         msg = msg.format(deleted_pc=output[Capture.PC].name)
         self.io.say(msg)
+        return True
+
+    def try_edit(self, user_input):
+        """
+        If 'user_input' is an 'edit' command invokation, edit a specified
+        character using CharCreationFlow and then return True, otherwise return
+        False.
+        """
+        output = parse(self.parsers[party.CMD_EDIT], user_input)
+        if output is None:
+            return False
+        if output[Capture.PC] is None:
+            self.io.say(self.data.strings[cat.PARTY_CREATION][party.NO_SUCH_CHARACTER])
+            return True
+        subflow = charstage.CharCreationFlow(self.io, self.data, self.game)
+        mofloc.execute(subflow, charstage.EDIT_EXISTING, output[Capture.PC])
+        self.welcome_back()
         return True
 
     def try_overview(self, user_input):

@@ -41,6 +41,15 @@ class PlayerCharacter():
         self.background = new_bg
         self.apply_background_modifiers()
 
+
+    #--------- species manipulation ---------#
+
+    def change_species(self, species):
+        """ Change PC's species. """
+        self.species = species
+        self._init_stats()
+        self.apply_background_modifiers()
+
     #--------- stat manipulation ---------#
 
     def _init_stats(self):

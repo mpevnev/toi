@@ -10,6 +10,7 @@ NAME_PROMPT = "name prompt"
 NAME_IS = "name is"
 NEW_NAME_IS = "new name is"
 NEXT = "what next"
+NO_SUCH_CHARACTER = "no char"
 WELCOME_BACK = "welcome back"
 
 CMD_ADD = "add"

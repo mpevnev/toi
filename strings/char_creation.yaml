@@ -3,9 +3,21 @@
 
 bg not selected: You forgot to select the background!
 
-greeting: |
+greeting edit: |
+    You are about to edit the following character:
+    {overview}
+    To see a list of all available commands, use 'help character creation'.
+    Essential commands are:
+    * 'set name to {{NAME}}' to set character's name,
+    * 'set background to {{BACKGROUND}}` to set character's class,
+    * `set species to {{SPECIES}}' to set character's species,
+    * 'done' when you're ready
+    * 'abort' if you want to discard changes.
+
+greeting new: |
     You are about to create a character. To see a list of all available
     commands, use 'help character creation'. Essential commands are:
+    * 'set name to {NAME}' to set character's name,
     * 'set background to {BACKGROUND}' to set character's class,
     * 'set species to {SPECIES}' to set character's species,
     * 'done' when you're ready,
@@ -21,6 +33,8 @@ is okay: |
     Confirm?
 
 name prompt: "Enter the name for your character:"
+
+new name: "Character's new name is '{name}'."
 
 prompt: What next?
 
