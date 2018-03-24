@@ -12,6 +12,8 @@ just yes no abort: Just 'yes', 'no' or 'abort', please.
 
 list leader: "* "
 
+no such char: But there is no such character in the party!
+
 okay: Okay, then.
 
 what: Sorry, what?

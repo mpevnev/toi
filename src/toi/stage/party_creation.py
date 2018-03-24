@@ -135,7 +135,7 @@ class PartyCreationFlow(cstage.FlowWithHelp):
         if output is None:
             return False
         if output[Capture.PC] is None:
-            self.io.say(self.data.strings[cat.PARTY_CREATION][party.NO_SUCH_CHAR])
+            self.io.say(self.data.strings[cat.COMMON][common.NO_SUCH_CHAR])
             return True
         self.game.party.delete_character(output[Capture.PC])
         msg = self.data.strings[cat.PARTY_CREATION][party.DONE_DELETING]
