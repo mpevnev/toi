@@ -7,8 +7,12 @@ list species: ["list species", "ls species"]
 
 overview: ["o[verview]"]
 
-set bg: ["set bg[ to] {bg}", "bg {bg}", "set background[ to] {bg}"]
+set bg:
+    - "set bg[ to] {bg}"
+    - "bg {bg}"
+    - "set background[ to] {bg}"
+    - "c[lass] {bg}"
 
 set name: ["set name[ to] {name}", "n[ame] {name}"]
 
-set species: ["set species[ to] {species}", "sp[ecies] {species}"]
+set species: ["set species[ to] {species}", "s[p[ecies]] {species}"]
